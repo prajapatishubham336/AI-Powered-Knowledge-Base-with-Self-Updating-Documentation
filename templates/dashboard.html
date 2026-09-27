@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KnowledgeHub AI</title><link rel="stylesheet" href="/static/css/style.css"></head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand"><span>◇</span> KNOWLEDGEHUB <b>AI</b></div>
+  <div class="side-title">WORKSPACE</div>
+  <a class="active" href="/">⌂ <span>Dashboard</span></a>
+  <a href="#knowledge">▣ <span>Knowledge Base</span></a>
+  <a href="#ask">✦ <span>AI Search</span></a>
+  <a href="#knowledge">◫ <span>Documents</span></a>
+  <a href="#versions">↻ <span>Versions</span></a>
+  <a href="#faqs">☷ <span>FAQs</span></a>
+  <a href="#analytics">▥ <span>Analytics</span></a>
+  <a href="#settings">⚙ <span>Settings</span></a>
+  <div class="copilot"><strong>✦ AI Copilot</strong><small>Ask anything about your company knowledge.</small><button onclick="document.getElementById('ask').scrollIntoView()">Open Copilot →</button></div>
+  <div class="profile"><div class="avatar">S</div><div><b>Shubham</b><small>Admin</small></div></div>
+</aside>
+<main>
+<header><div><h1>Knowledge Base</h1><p>Organize, manage and make your company knowledge accessible to AI.</p></div>
+<button class="primary" onclick="document.getElementById('file').click()">＋ Add Document</button><input id="file" type="file" hidden accept=".pdf,.docx,.txt,.md" onchange="uploadDoc(this)">
+</header>
+
+<section class="cards">
+<div class="card"><span>▣</span><small>Total Documents</small><strong>{{stats.documents}}</strong><em>↑ 12% this month</em></div>
+<div class="card"><span>▤</span><small>Total Size</small><strong>{{stats.size}} GB</strong><em>↑ 8% this month</em></div>
+<div class="card"><span>◉</span><small>Sources</small><strong>{{stats.sources}}</strong><em>↑ 5% this month</em></div>
+<div class="card"><span>✦</span><small>AI Usage</small><strong>{{stats.ai_usage}}</strong><em>Questions answered</em></div>
+<div class="health"><div><small>Knowledge Health</small><strong>{{stats.health.score}}%</strong><span>Healthy knowledge base</span></div><div class="ring"><b>{{stats.health.score}}%</b></div></div>
+</section>
+
+<section class="workspace" id="ask">
+<div class="searchbox"><div><span>✦</span><b>Ask your knowledge base</b><p>Get grounded answers with document citations.</p></div><div class="askrow"><input id="question" placeholder="e.g. How does Payment API authentication work?"><button onclick="askAI()">Ask AI</button></div><div id="answer"></div></div>
+</section>
+
+<section class="grid" id="knowledge">
+<div class="panel wide"><div class="panelhead"><div><h2>Documents</h2><p>All indexed company knowledge</p></div><button onclick="document.getElementById('file').click()">＋ Upload</button></div>
+<div class="tabs">All Content &nbsp;&nbsp; Files &nbsp;&nbsp; Data Sources &nbsp;&nbsp; Tags</div>
+<table><thead><tr><th>Name</th><th>Type</th><th>Version</th><th>Status</th><th>Last Updated</th></tr></thead><tbody>
+{% for d in documents %}<tr><td><span class="docicon">▤</span>{{d.name}}</td><td>{{d.name.split('.')[-1]|upper}}</td><td>v{{d.version}}</td><td><span class="status {{d.status|lower}}">{{d.status}}</span></td><td>{{d.updated_at}}</td></tr>{% else %}<tr><td colspan="5" class="empty">No documents yet. Upload your first document.</td></tr>{% endfor %}
+</tbody></table></div>
+<div class="panel"><div class="panelhead"><h2>Top Accessed</h2><a>View All</a></div>
+<ul class="list">{% for d in documents[:5] %}<li><span class="mini">▤</span><div><b>{{d.name}}</b><small>v{{d.version}} · indexed</small></div></li>{% else %}<li>No data</li>{% endfor %}</ul></div>
+</section>
+
+<section class="grid" id="versions">
+<div class="panel"><div class="panelhead"><h2>Recent Versions</h2></div><ul class="activity">{% for v in versions %}<li><span>↻</span><div><b>{{v.name}}</b><small>Version {{v.version}} · {{v.status}} · {{v.updated_at}}</small></div></li>{% else %}<li>No versions yet</li>{% endfor %}</ul></div>
+<div class="panel" id="faqs"><div class="panelhead"><h2>Generated FAQs</h2></div>{% for f in faqs %}<div class="faq"><b>{{f.question}}</b><p>{{f.answer[:180]}}{% if f.answer|length>180 %}...{% endif %}</p></div>{% else %}<p class="muted">Ask a question and save it as an FAQ.</p>{% endfor %}</div>
+</section>
+<footer>KnowledgeHub AI · RAG-powered company knowledge management</footer>
+</main></div>
+<script src="/static/js/app.js"></script></body></html>
